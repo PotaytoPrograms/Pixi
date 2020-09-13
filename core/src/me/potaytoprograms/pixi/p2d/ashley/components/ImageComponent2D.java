@@ -6,14 +6,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Disposable;
 import me.potaytoprograms.pixi.p2d.util.ShaderSetup;
 
-public class ImageComponent2D implements Component {
+public class ImageComponent2D implements Component, Disposable {
 	
 	public Sprite sprite;
-	private TransformComponent2D transform;
+	private final TransformComponent2D transform;
 	public ShaderProgram shader;
-	private ShaderSetup setup;
+	private final ShaderSetup setup;
 	public boolean visible = true;
 	
 	public ImageComponent2D(Texture img, TransformComponent2D transform, ShaderProgram shader, ShaderSetup setup){
@@ -48,5 +49,11 @@ public class ImageComponent2D implements Component {
 		sprite.draw(batch);
 		batch.end();
 		batch.setShader(null);
+	}
+	
+	@Override
+	public void dispose() {
+		sprite.getTexture().dispose();
+		if(shader != null) shader.dispose();
 	}
 }

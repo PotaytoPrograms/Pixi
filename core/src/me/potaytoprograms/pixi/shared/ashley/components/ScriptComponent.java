@@ -2,14 +2,15 @@ package me.potaytoprograms.pixi.shared.ashley.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Disposable;
 import me.potaytoprograms.pixi.shared.ashley.util.IScript;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScriptComponent implements Component {
-	private HashMap<String, IScript> scripts;
-	private Entity entity;
+public class ScriptComponent implements Component, Disposable {
+	private final HashMap<String, IScript> scripts;
+	private final Entity entity;
 	
 	public ScriptComponent(Entity entity){
 		this.entity = entity;
@@ -28,12 +29,17 @@ public class ScriptComponent implements Component {
 	}
 	
 	public void removeScript(String id){
-		if(scripts.containsKey(id)){
-			scripts.remove(id);
-		}
+		scripts.remove(id);
 	}
 	
 	public IScript getScript(String id){
 		return scripts.get(id);
+	}
+	
+	@Override
+	public void dispose() {
+		for(IScript script : scripts.values()){
+			script.dispose();
+		}
 	}
 }

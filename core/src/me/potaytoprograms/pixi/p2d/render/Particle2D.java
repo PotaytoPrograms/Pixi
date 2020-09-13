@@ -3,9 +3,10 @@ package me.potaytoprograms.pixi.p2d.render;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import me.potaytoprograms.pixi.p2d.ashley.components.TransformComponent2D;
 
-public class Particle2D {
+public class Particle2D implements Disposable {
 	
 	public TransformComponent2D transform;
 	public Vector2 offSet;
@@ -20,5 +21,10 @@ public class Particle2D {
 		this.effect = particle;
 		this.scale = scale;
 		effect.setEmittersCleanUpBlendFunction(false);
+	}
+	
+	@Override
+	public void dispose() {
+		effect.dispose();
 	}
 }

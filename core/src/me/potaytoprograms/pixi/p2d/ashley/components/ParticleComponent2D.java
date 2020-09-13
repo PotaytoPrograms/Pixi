@@ -4,17 +4,18 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Disposable;
 import me.potaytoprograms.pixi.p2d.render.Particle2D;
 import me.potaytoprograms.pixi.p2d.util.ShaderSetup;
 
 import java.util.HashMap;
 
-public class ParticleComponent2D implements Component {
+public class ParticleComponent2D implements Component, Disposable {
 
-	private HashMap<String, Particle2D> particles;
-	private ShaderProgram shader;
-	private ShaderSetup setup;
-	private HashMap<ParticleEffectPool.PooledEffect, Particle2D> effects;
+	private final HashMap<String, Particle2D> particles;
+	private final ShaderProgram shader;
+	private final ShaderSetup setup;
+	private final HashMap<ParticleEffectPool.PooledEffect, Particle2D> effects;
 	
 	public ParticleComponent2D(ShaderProgram shader, ShaderSetup setup){
 		this.shader = shader;
@@ -59,5 +60,12 @@ public class ParticleComponent2D implements Component {
 	public void stopParticle(String name){
 		particles.get(name).effect.reset();
 		effects.remove(particles.get(name).particle.obtain(), false);
+	}
+	
+	@Override
+	public void dispose() {
+		for(Particle2D particle2D : particles.values()){
+			particle2D.dispose();
+		}
 	}
 }

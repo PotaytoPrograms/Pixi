@@ -1,8 +1,7 @@
 package me.potaytoprograms.pixi.p2d.render;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Disposable;
 
-public interface Animation2D {
-	
-	Sprite getSprite(float delta);
+public interface Animation2D extends Disposable {
+
 }

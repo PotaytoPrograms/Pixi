@@ -8,10 +8,10 @@ import com.badlogic.gdx.utils.Array;
 public class ImageAnimation implements Animation2D {
 	
 	private Array<Sprite> sprites;
-	private float fps;
+	private final float fps;
 	private float lastFrame = 0;
 	private int frame = 0;
-	private boolean loop;
+	private final boolean loop;
 	
 	public ImageAnimation(Texture texture, int vFrames, int hFrames, float fps, boolean loop){
 		this(new TextureRegion(texture), vFrames, hFrames, fps, loop);
@@ -36,7 +36,6 @@ public class ImageAnimation implements Animation2D {
 		this.loop = loop;
 	}
 	
-	@Override
 	public Sprite getSprite(float delta){
 		lastFrame += delta;
 		if(lastFrame >= 1.0/fps){
@@ -46,5 +45,12 @@ public class ImageAnimation implements Animation2D {
 			return sprites.get(frame);
 		}
 		return sprites.get(frame);
+	}
+	
+	@Override
+	public void dispose() {
+		for(Sprite sprite : sprites){
+			sprite.getTexture().dispose();
+		}
 	}
 }

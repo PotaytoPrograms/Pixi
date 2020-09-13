@@ -5,8 +5,10 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import me.potaytoprograms.pixi.shared.ashley.util.IScript;
@@ -53,9 +55,10 @@ public class Box2dUtil {
 		return body;
 	}
 	
-	public static Body createBody(World world, Shape shape, float friction, float restitution, float density, short category, short mask, short group, boolean fixedRotation, boolean isStatic, boolean isSensor, IScript script){
+	public static Body createBody(World world, Shape shape, float x, float y, float friction, float restitution, float density, short category, short mask, short group, boolean fixedRotation, boolean isStatic, boolean isSensor, IScript script){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.fixedRotation = fixedRotation;
+		bodyDef.position.set(x, y);
 		if(isStatic) bodyDef.type = BodyDef.BodyType.StaticBody;
 		else bodyDef.type = BodyDef.BodyType.DynamicBody;
 		FixtureDef fixtureDef = new FixtureDef();
@@ -72,30 +75,40 @@ public class Box2dUtil {
 		return body;
 	}
 	
-	public static Array<Body> parseTiledMapObjectLayer(MapLayer layer, World world, float ppm, float friction, float restitution, float density, short category, short mask, short group, boolean fixedRotation, boolean isStatic, boolean isSensor, IScript script){
+	public static Array<Body> parseTiledMapLayer(MapLayer layer, World world, float ppm, float friction, float restitution, float density, short category, short mask, short group, boolean fixedRotation, boolean isStatic, boolean isSensor, IScript script){
 		Array<Body> bodies = new Array<>();
 		MapObjects objects = layer.getObjects();
+		
 		for(MapObject object : objects){
 			PolygonShape shape = new PolygonShape();
+			
+			float x = object.getProperties().get("x", float.class);
+			float y = object.getProperties().get("y", float.class);
 			if(object instanceof PolygonMapObject){
 				Polygon polygon = ((PolygonMapObject)object).getPolygon();
 				polygon.setScale(1.0f/ppm,1.0f/ppm);
+				shape = new PolygonShape();
 				shape.set(polygon.getVertices());
 			}else if(object instanceof PolylineMapObject){
 				Polyline polygon = ((PolylineMapObject)object).getPolyline();
 				polygon.setScale(1.0f/ppm,1.0f/ppm);
+				shape = new PolygonShape();
 				shape.set(polygon.getVertices());
+			}else if(object instanceof RectangleMapObject){
+				Rectangle polygon = ((RectangleMapObject)object).getRectangle();
+				shape = new PolygonShape();
+				shape.setAsBox(polygon.width/2, polygon.height/2);
 			}
-			bodies.add(createBody(world, shape, friction, restitution, density, category, mask, group, fixedRotation, isStatic, isSensor, script));
+			bodies.add(createBody(world, shape, x, y, friction, restitution, density, category, mask, group, fixedRotation, isStatic, isSensor, script));
 		}
 		return bodies;
 	}
 	
-	public static Array<Body> parseTiledMapObjectLayer(MapLayer layer, World world, IScript script){
+	public static Array<Body> parseTiledMapLayer(MapLayer layer, World world, IScript script){
 		Array<Body> bodies = new Array<>();
 		MapObjects objects = layer.getObjects();
 		for(MapObject object : objects){
-			PolygonShape shape = new PolygonShape();
+			Shape shape = null;
 			
 			float friction = 0;
 			if(object.getProperties().containsKey("friction")) friction = object.getProperties().get("friction", float.class);
@@ -118,16 +131,24 @@ public class Box2dUtil {
 			boolean isSensor = false;
 			if(object.getProperties().containsKey("isSensor")) isSensor = object.getProperties().get("isSensor", boolean.class);
 			
+			float x = object.getProperties().get("x", float.class);
+			float y = object.getProperties().get("y", float.class);
 			if(object instanceof PolygonMapObject){
 				Polygon polygon = ((PolygonMapObject)object).getPolygon();
 				polygon.setScale(1.0f/ppm,1.0f/ppm);
-				shape.set(polygon.getVertices());
+				shape = new PolygonShape();
+				((PolygonShape) shape).set(polygon.getVertices());
 			}else if(object instanceof PolylineMapObject){
 				Polyline polygon = ((PolylineMapObject)object).getPolyline();
 				polygon.setScale(1.0f/ppm,1.0f/ppm);
-				shape.set(polygon.getVertices());
+				shape = new PolygonShape();
+				((PolygonShape)shape).set(polygon.getVertices());
+			}else if(object instanceof RectangleMapObject){
+				Rectangle polygon = ((RectangleMapObject)object).getRectangle();
+				shape = new PolygonShape();
+				((PolygonShape)shape).setAsBox(polygon.width/2, polygon.height/2);
 			}
-			bodies.add(createBody(world, shape, friction, restitution, density, (short) category, (short) mask, (short) group, fixedRotation, isStatic, isSensor, script));
+			bodies.add(createBody(world, shape, x, y, friction, restitution, density, (short) category, (short) mask, (short) group, fixedRotation, isStatic, isSensor, script));
 		}
 		return bodies;
 	}

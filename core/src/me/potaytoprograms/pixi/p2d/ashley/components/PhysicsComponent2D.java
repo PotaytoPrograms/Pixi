@@ -13,8 +13,11 @@ public class PhysicsComponent2D implements Component {
 	public TransformComponent2D transform;
 	
 	public PhysicsComponent2D(TransformComponent2D transform, World world, Shape shape, float friction, float restitution, float density, short category, short mask, short group, boolean fixedRotation, boolean isStatic, boolean isSensor, IScript script){
-		body = Box2dUtil.createBody(world, shape, friction, restitution, density, category, mask, group, fixedRotation, isStatic, isSensor, script);
-		body.getPosition().set(transform.x, transform.y);
+		this(Box2dUtil.createBody(world, shape, transform.x, transform.y, friction, restitution, density, category, mask, group, fixedRotation, isStatic, isSensor, script), transform);
+	}
+	
+	public PhysicsComponent2D(Body body, TransformComponent2D transform) {
+		this.body = body;
 		this.transform = transform;
 	}
 	

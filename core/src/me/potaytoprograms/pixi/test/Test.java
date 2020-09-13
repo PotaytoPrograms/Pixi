@@ -7,30 +7,44 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import me.potaytoprograms.pixi.p2d.box2d.RayCastRender;
 import me.potaytoprograms.pixi.shared.scene.SceneManager;
-import me.potaytoprograms.pixi.test.scenes.GameScene;
 
 public class Test extends ApplicationAdapter {
 	
-	SceneManager sceneManager;
-	SpriteBatch batch;
+	private SceneManager sceneManager;
+	private SpriteBatch batch;
 	
 	@Override
-	public void create () {
+	public void create() {
 		sceneManager = new SceneManager();
 		batch = new SpriteBatch();
 		sceneManager.loadScene(new GameScene(batch));
-		Box2D.init();
 		RayCastRender.init();
+		Box2D.init();
 	}
-
+	
 	@Override
-	public void render () {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	public void resize(int width, int height) {
+	
+	}
+	
+	@Override
+	public void render() {
+		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		sceneManager.update(Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override
-	public void dispose () {
+	public void pause() {
+	
+	}
+	
+	@Override
+	public void resume() {
+	
+	}
+	
+	@Override
+	public void dispose() {
 		sceneManager.dispose();
 		batch.dispose();
 		RayCastRender.dispose();
