@@ -1,4 +1,4 @@
-package me.potaytoprograms.pixi.test;
+package me.potaytoprograms.pixi.test.testgame2d;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,6 +14,7 @@ import me.potaytoprograms.pixi.p2d.box2d.RayCastRender;
 import me.potaytoprograms.pixi.shared.ashley.systems.ScriptSystem;
 import me.potaytoprograms.pixi.shared.scene.IScene;
 import me.potaytoprograms.pixi.shared.scene.SceneManager;
+import me.potaytoprograms.pixi.test.Constants;
 
 public class GameScene implements IScene {
 	
@@ -37,7 +38,7 @@ public class GameScene implements IScene {
 		this.sceneManager = sceneManager;
 		engine = sceneManager.engine;
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+		camera.setToOrtho(false, 800/ Constants.PPM, 480/Constants.PPM);
 		world = new World(new Vector2(), true);
 		b2dr = new Box2DDebugRenderer();
 		renderSystem2D = new RenderSystem2D(1, batch, camera);
@@ -45,13 +46,12 @@ public class GameScene implements IScene {
 		tmxMapLoader = new TmxMapLoader();
 		tiledMap = tmxMapLoader.load("untitled.tmx");
 		
-		Box2dUtil.parseTiledMapLayer(tiledMap.getLayers().get("Object Layer 1"), world, null);
+		Box2dUtil.parseTiledMapLayer(tiledMap.getLayers().get("Object Layer 1"), world, 1.0f/Constants.PPM,null);
 		
 		engine.addSystem(renderSystem2D);
 		engine.addSystem(scriptSystem);
 		
-		Player player = new Player(0, 0, world, camera);
-		engine.addEntity(player);
+		engine.addEntity(new Player(10/Constants.PPM, 100/Constants.PPM, world, camera));
 	}
 	
 	@Override
@@ -64,6 +64,8 @@ public class GameScene implements IScene {
 	
 	@Override
 	public void dispose() {
-	
+		b2dr.dispose();
+		world.dispose();
+		tiledMap.dispose();
 	}
 }

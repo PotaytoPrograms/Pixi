@@ -45,7 +45,11 @@ public class ImageComponent2D implements Component, Disposable {
 		sprite.setRotation(transform.rotation);
 		batch.setShader(shader);
 		batch.begin();
-		if(setup != null) setup.setup(shader);
+		if(shader != null) {
+			shader.bind();
+			if (setup != null) setup.setup(shader);
+			shader.end();
+		}
 		sprite.draw(batch);
 		batch.end();
 		batch.setShader(null);

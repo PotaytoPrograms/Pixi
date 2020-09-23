@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="3">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="4">
+ <properties>
+  <property name="category" type="int" value="2"/>
+  <property name="isStatic" type="bool" value="true"/>
+  <property name="mask" type="int" value="1"/>
+ </properties>
  <layer id="1" name="Tile Layer 1" width="10" height="10">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,
@@ -16,6 +21,13 @@
  </layer>
  <objectgroup id="2" name="Object Layer 1">
   <object id="1" x="0" y="144" width="160" height="16">
+   <properties>
+    <property name="category" type="int" value="2"/>
+    <property name="isStatic" type="bool" value="true"/>
+    <property name="mask" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="3" x="112.333" y="96" width="45" height="14.6667">
    <properties>
     <property name="category" type="int" value="2"/>
     <property name="isStatic" type="bool" value="true"/>

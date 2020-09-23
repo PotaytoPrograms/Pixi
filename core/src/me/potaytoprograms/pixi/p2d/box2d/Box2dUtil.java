@@ -75,7 +75,7 @@ public class Box2dUtil {
 		return body;
 	}
 	
-	public static Array<Body> parseTiledMapLayer(MapLayer layer, World world, float ppm, float friction, float restitution, float density, short category, short mask, short group, boolean fixedRotation, boolean isStatic, boolean isSensor, IScript script){
+	public static Array<Body> parseTiledMapLayer(MapLayer layer, World world, float scale, float friction, float restitution, float density, short category, short mask, short group, boolean fixedRotation, boolean isStatic, boolean isSensor, IScript script){
 		Array<Body> bodies = new Array<>();
 		MapObjects objects = layer.getObjects();
 		
@@ -86,12 +86,12 @@ public class Box2dUtil {
 			float y = object.getProperties().get("y", float.class);
 			if(object instanceof PolygonMapObject){
 				Polygon polygon = ((PolygonMapObject)object).getPolygon();
-				polygon.setScale(1.0f/ppm,1.0f/ppm);
+				polygon.setScale(scale, scale);
 				shape = new PolygonShape();
 				shape.set(polygon.getVertices());
 			}else if(object instanceof PolylineMapObject){
 				Polyline polygon = ((PolylineMapObject)object).getPolyline();
-				polygon.setScale(1.0f/ppm,1.0f/ppm);
+				polygon.setScale(scale,scale);
 				shape = new PolygonShape();
 				shape.set(polygon.getVertices());
 			}else if(object instanceof RectangleMapObject){
@@ -104,7 +104,7 @@ public class Box2dUtil {
 		return bodies;
 	}
 	
-	public static Array<Body> parseTiledMapLayer(MapLayer layer, World world, IScript script){
+	public static Array<Body> parseTiledMapLayer(MapLayer layer, World world, float scale, IScript script){
 		Array<Body> bodies = new Array<>();
 		MapObjects objects = layer.getObjects();
 		for(MapObject object : objects){
@@ -122,8 +122,6 @@ public class Box2dUtil {
 			if(object.getProperties().containsKey("mask")) mask = object.getProperties().get("mask", int.class);
 			int group = 0;
 			if(object.getProperties().containsKey("group")) group = object.getProperties().get("group", int.class);
-			float ppm = 1;
-			if(object.getProperties().containsKey("ppm")) ppm = object.getProperties().get("ppm", float.class);
 			boolean fixedRotation = false;
 			if(object.getProperties().containsKey("fixedRotation")) fixedRotation = object.getProperties().get("fixedRotation", boolean.class);
 			boolean isStatic = false;
@@ -135,14 +133,14 @@ public class Box2dUtil {
 			float y = object.getProperties().get("y", float.class);
 			if(object instanceof PolygonMapObject){
 				Polygon polygon = ((PolygonMapObject)object).getPolygon();
-				polygon.setScale(1.0f/ppm,1.0f/ppm);
+				polygon.setScale(scale,scale);
 				shape = new PolygonShape();
 				((PolygonShape) shape).set(polygon.getVertices());
 			}else if(object instanceof PolylineMapObject){
 				Polyline polygon = ((PolylineMapObject)object).getPolyline();
-				polygon.setScale(1.0f/ppm,1.0f/ppm);
-				shape = new PolygonShape();
-				((PolygonShape)shape).set(polygon.getVertices());
+				polygon.setScale(scale,scale);
+				shape = new ChainShape();
+				((ChainShape)shape).createChain(polygon.getVertices());
 			}else if(object instanceof RectangleMapObject){
 				Rectangle polygon = ((RectangleMapObject)object).getRectangle();
 				shape = new PolygonShape();
