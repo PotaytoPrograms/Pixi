@@ -21,11 +21,11 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Pixi"
-        gdxVersion = '1.9.11'
+        gdxVersion = '1.9.12'
         roboVMVersion = '2.3.8'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
-        aiVersion = '1.8.0'
+        box2DLightsVersion = '1.5'
+        ashleyVersion = '1.7.3'
+        aiVersion = '1.8.2'
     }
 
     repositories {
@@ -44,15 +44,11 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
-        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
-        
+
     }
 }
 
@@ -65,12 +61,8 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
         api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
-        api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-        api "com.esotericsoftware.spine:spine-libgdx:3.6.53.1"
-        api "com.kotcrab.vis:vis-ui:1.4.6"
+        api "com.esotericsoftware.spine:spine-libgdx:3.8.55.1"
+        api "com.kotcrab.vis:vis-ui:1.4.8"
         
     }
 }
